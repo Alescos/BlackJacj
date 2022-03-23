@@ -9,13 +9,14 @@ let puntosComputadora=0;
 //Referencias HTML
 const btnPedir = document.querySelector("#btnPedir");
 const btnDetener = document.querySelector("#btnDetener");
+const btnNuevo = document.querySelector("#btnNuevo");
 const puntosHTML = document.querySelectorAll('small');
 const divCartasJugador = document.querySelector('#jugador-cartas');
 const divCartasComputador= document.querySelector('#computador-cartas');
 
 //Crea la baraja aleatoriamente
 const crearDeck = ()=>{
-    for (let i = 0; i <= 10; i++) {
+    for (let i = 2; i <= 10; i++) {
     
         for (let tipo of tipos) {
             deck.push( i + tipo); 
@@ -30,7 +31,7 @@ const crearDeck = ()=>{
     }
 
     deck=_.shuffle( deck );
-    console.log( deck );
+    //console.log( deck );
 }
 crearDeck();
 
@@ -90,9 +91,23 @@ const turnoComputadora = ( puntosMinimos ) => {
             break;
         }
 
-    } while ( (puntosComputadora < puntosMinimos) && (puntosMinimos<=21)) {
-        
-    }
+    } while ( (puntosComputadora < puntosMinimos) && (puntosMinimos<=21))
+
+    //Ejecuta el callback despues de 100ms
+    setTimeout(() => {
+        if( puntosComputadora === puntosMinimos ){
+            alert('Nadie gana :C');
+        }else if ( puntosMinimos > 21 ) {
+            alert( 'Computadora gana' );
+        }else if ( puntosComputadora > 21 ){
+            alert( 'Jugador gana' );
+        } else if( (puntosMinimos < 21) & (puntosMinimos>puntosComputadora) ) {
+            alert( 'Jugador gana');
+        } else {
+            alert( 'Computadora gana' );
+        }
+    }, 100);
+   
 
 }
 
@@ -116,17 +131,31 @@ btnPedir.addEventListener('click', ()=>{
         btnPedir.disabled = true;
         btnDetener.disabled=true;
         turnoComputadora( puntosJugador );
+        
     }else if ( puntoJugador === 21 ) {
         btnPedir.disabled = true;
         btnDetener.disabled=true;
         turnoComputadora( puntosJugador );
     }
-})
+});
 
 
 btnDetener.addEventListener('click', ()=>{
     btnPedir.disabled=true;
     btnDetener.disabled=true;
     turnoComputadora( puntosJugador );
-})
+});
 
+btnNuevo.addEventListener('click', ()=>{
+    deck=[]
+    crearDeck();
+    puntosComputadora=0;
+    puntosJugador=0;
+    puntosHTML[0].innerText=0;
+    puntosHTML[1].innerText=0;
+    btnPedir.disabled=false;
+    btnDetener.disabled=false;
+    divCartasJugador.innerHTML = '';
+    divCartasComputador.innerHTML = '';
+    
+});
